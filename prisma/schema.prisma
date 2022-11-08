@@ -14,11 +14,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Patron {
+  id String @id @default(cuid())
+  first_name String
+  last_name String
+  family Family @relation(fields: [familyId], references: [id])
+  familyId String
 }
+
+model Family {
+  id String @id @default(cuid())
+  name String
+  members Patron[]
+  visits Visit[]
+}
+
+model Visit {
+  id String @id @default(cuid())
+  dist_day DistDay @relation(fields: [dist_dayId], references: [id])
+  dist_dayId String
+  families Family[]
+}
+
+model DistDay {
+  id String @id @default(cuid())
+  visits Visit[]
+}
+
 
 // Necessary for Next auth
 model Account {
