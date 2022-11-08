@@ -20,6 +20,7 @@ model Patron {
   last_name String
   family Family @relation(fields: [familyId], references: [id])
   familyId String
+  family_rep Boolean
 }
 
 model Family {
