@@ -1,4 +1,14 @@
-const VisitTable = ({ visits }) => {
+type Visit = {
+  families: string[];
+  grocery: number;
+  meat: number;
+};
+
+interface VisitTableProps {
+  visits: Visit[]
+}
+
+const VisitTable = ({ visits }: VisitTableProps) => {
   
   return (
     <div

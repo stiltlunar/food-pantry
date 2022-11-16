@@ -1,14 +1,61 @@
-const VisitForm = ({family, visit, onChange, onAdd, onSubmit, familyList}) => {
-  function handleChange(e) {
-    onChange(e)
-  }
+import React, { useState } from "react";
 
+type Visit = {
+  families: string[];
+  grocery: number;
+  meat: number;
+};
+
+type Member = {
+  id: number;
+  name: string;
+  family_rep: boolean;
+}
+
+type Family = {
+  familyName: string,
+  members: Member[]
+}
+
+interface VisitFormProps {
+  familyList: Family[],
+  onSubmit: any
+}
+
+const VisitForm = ({ familyList, onSubmit }: VisitFormProps) => {
+  const [visit, setVisit] = useState<Visit>({families: [], grocery: 0, meat: 0});
+  const [family, setFamily] = useState<string>('')
+
+  const printContent = `<h1>This is Printable</h1><p>${visit.families.join(', ')}, Groceries: ${visit.grocery}, Meat: ${visit.meat}</p>`
+  
+  function handleChange(e: React.FormEvent<HTMLInputElement>) {
+    setFamily(e.currentTarget.value);
+  }
+  
+  // TODO: handle same last name for family lookup
+  // TODO: handle only one visit per family per distDay
   function handleAdd() {
-    onAdd()
+    const newVisit = visit
+    newVisit.families.push(family)
+    setFamily('')
+    setVisit(newVisit)
   }
 
-  function handleSubmit(e) {
-    onSubmit(e)
+  function print() {
+    const printable = document.querySelector('iframe')?.contentWindow
+    if (printable) {
+      printable.print()
+    }
+  }
+
+  function handleSubmit(e: React.MouseEvent) {
+    e.preventDefault();
+    if (!visit) {
+      return;
+    }
+    onSubmit(visit)
+    print()
+    setVisit({families: [], grocery: 0, meat: 0});
   }
   
   return (
@@ -41,6 +88,7 @@ const VisitForm = ({family, visit, onChange, onAdd, onSubmit, familyList}) => {
           />
         </form>
         <p>{visit.families && visit.families.join(', ')}</p>
+        <iframe srcDoc={printContent} className="hidden"></iframe>
       </div>
   )
 }

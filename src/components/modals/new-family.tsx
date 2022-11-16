@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { boolean } from "zod";
+import React, { useState } from "react";
 
 type Member = {
   id: number;
@@ -7,34 +6,37 @@ type Member = {
   family_rep: boolean;
 }
 
-const NewFamily = ({ onSubmit }) => {
+interface NewFamilyProps {
+  onSubmit: any
+}
+
+const NewFamily = ({ onSubmit }: NewFamilyProps) => {
   const [familyName, setFamilyName] = useState('')
   const [members, setMembers] = useState<Member[]>([]);
   const [newMember, setNewMember] = useState({id: 0, name: '', family_rep: false});
 
 
-  function handleChangeFamilyName(e) {
-    setFamilyName(e.target.value)
+  function handleChangeFamilyName(e: React.FormEvent<HTMLInputElement>) {
+    setFamilyName(e.currentTarget.value)
   }
 
-  function handleChangeNewMember(event) {
+  function handleChangeNewMember(e: React.FormEvent<HTMLInputElement>) {
     setNewMember(prev => {
       return {
         ...prev,
-        name: event.target.value
+        name: e.currentTarget.value
       }
     })
   }
 
-  function handleAddMember(event) {
-    event.preventDefault();
+  function handleAddMember(e: React.FormEvent) {
+    e.preventDefault();
     setMembers((prev) => [...prev, newMember]);
     setNewMember({id: newMember.id + 1, name: '', family_rep: false})   
   }
 
-  function handleChangeMember(e, id) {
-    console.log(e.target.value);
-    setMembers(prev => prev.map(member => member.id === id ? {...member, name: e.target.value} : member))
+  function handleChangeMember(e: React.FormEvent<HTMLInputElement>, id: number) {
+    setMembers(prev => prev.map(member => member.id === id ? {...member, name: e.currentTarget.value} : member))
   }
 
   function handleDeleteMember(id: number) {
