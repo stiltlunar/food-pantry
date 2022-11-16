@@ -1,4 +1,4 @@
-const VisitForm = ({family, visit, onChange, onAdd, onSubmit}) => {
+const VisitForm = ({family, visit, onChange, onAdd, onSubmit, familyList}) => {
   function handleChange(e) {
     onChange(e)
   }
@@ -19,6 +19,7 @@ const VisitForm = ({family, visit, onChange, onAdd, onSubmit}) => {
         <h2 className="mb-6 text-center text-xl font-bold">Add a Visit</h2>
         <form className="m-auto flex w-2/3 flex-col">
           <input
+            list="family-list"
             className="m-2 border border-black p-2 rounded-xl focus:shadow-lg transition duration-300"
             type="text"
             placeholder="Add a Family"
@@ -26,6 +27,11 @@ const VisitForm = ({family, visit, onChange, onAdd, onSubmit}) => {
             onChange={handleChange}
           />
           <input className="m-2 rounded-xl border bg-green-200 border-black p-2 transition hover:bg-black hover:text-white disabled:border-neutral-400 disabled:text-neutral-400 disabled:bg-white" type="button" value='ADD FAMILY' disabled={!family} onClick={handleAdd} />
+          <datalist id="family-list">
+            {familyList.map((family, index) => {
+              return <option value={family.familyName} key={index} />
+            })}
+          </datalist>
           <input
             className="m-2 rounded-xl border bg-blue-200 border-black p-2 transition hover:bg-black hover:text-white disabled:border-neutral-400 disabled:text-neutral-400 disabled:bg-white"
             disabled={visit.families.length === 0}
@@ -35,7 +41,6 @@ const VisitForm = ({family, visit, onChange, onAdd, onSubmit}) => {
           />
         </form>
         <p>{visit.families && visit.families.join(', ')}</p>
-        <p>Families: {visit.families.length}</p>
       </div>
   )
 }
